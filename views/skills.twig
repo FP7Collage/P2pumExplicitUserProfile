@@ -1,0 +1,204 @@
+{% extends "layout.twig" %}
+
+
+{% block main %}
+
+    <div class="row">
+        <div class="col-lg-offset-10 col-lg-2 text-right" style="margin-bottom: 15px;">
+            {% if  not isLinkedInConnected %}
+            You can fill you up your skills by connecting the <strong>"LinkedIn Peer"</strong>
+            <a href="{{ peers.linkedin }}?url={{ appurl }}/connect?peer=linkedin" class="btn btn-block btn-info " target="_blank">Connect</a>
+            {% else %}
+                <h4>LinkedIn Peer Connected!</h4>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="row">
+    <form id="skills-form" method="POST" action="/skills" role="form" class="form-horizontal">
+        {{ my_form | safe }}
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a id="submit-btn" class="btn btn-default pull-right">Register</a>
+            </div>
+        </div>
+    </form>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+
+
+        (function($,undefined){
+
+
+            var added = [];
+
+            console.log("Setting up...");
+            var taskListItemId=0;
+
+            var $skillsField = $('#id_skills');
+            $skillsField.attr('name','skill_text_field');
+
+            $skillsField.parent().append(
+                    $('<table />')
+                            .attr("id",'skill-list')
+                            .addClass("table")
+                            .addClass("table-striped")
+            );
+
+            function deleteSkill(item){
+
+                var index = $(item).attr("data-index");
+                console.log("Delete ",index);
+                added[index]="";
+                $('tr.skill-row-'+index).remove();
+                console.log(added);
+                return false;
+
+            }
+
+            function levelSelect(selected){
+
+                var $select=  $("<select />")
+                        .addClass("form-control");
+
+                for(var i=1; i <=5 ; i++){
+
+                    var $opt = $("<option/>").attr("value",i).html(i);
+
+                    console.log("test",i,selected,i===selected);
+
+                    if(i === selected){
+
+                        $opt.prop('selected', true);
+                    }
+
+                    $select.append($opt);
+
+
+
+                }
+
+                return $select;
+
+            }
+
+            function addSkill(skillSt){
+
+
+                var parts = skillSt.split(":");
+                var skill = parts[0];
+                var level = parseInt(parts[1]);
+
+                console.log("Skill ",$.inArray(skill,added), skill );
+
+                if(skill == undefined || skill.length <= 0 || $.inArray(skill,added) > -1 ){
+                    return;
+                }
+                console.log("Adding skill ",skill,level);
+
+                var $skill = $('#skill-list');
+                console.log("adding ",skill,"to",$skill);
+                $skill.append(
+                        $('<tr>')
+                                .addClass("skill-row-"+added.length)
+                                .append($("<td />")
+                                            .html(skill))
+                                .append(
+                                    $("<td />")
+                                            .append(levelSelect(level)))
+                                .append(
+                                $("<td />")
+                                        .append(
+                                        $("<a/>").attr("class","btn btn-xs btn-danger task-list-delete")
+                                                .html("<i class='glyphicon glyphicon-minus'></i>")
+                                                .attr("data-index",added.length)
+                                                .bind("click",function(e){
+                                                    e.preventDefault();
+                                                    return deleteSkill($(this));
+                                                })
+                                ))
+
+                );
+
+
+                added.push(skill);
+            }
+
+            $skillsField.keydown(function (e){
+                console.log("Hello");
+                if(e.keyCode == 13){
+                    e.preventDefault();
+                    addSkill($(this).val().trim()+":1");
+                    $(this).val("");
+                    $(this).select();
+                    return false;
+
+                }
+            });
+
+
+            $("#submit-btn").bind('click',function(e){
+
+                var $form = $("#skills-form");
+
+
+                for(var i=0;i<added.length; i++){
+
+                    var skill = added[i];
+
+
+                    if(skill.length > 0){
+
+                        var $tr = $(".skill-row-"+i);
+                        var $select= $tr.find("td:eq(1)").find(".form-control");
+                        var level = $select.find(":selected").val();
+
+                        console.log($select);
+
+                        console.log("Value ",skill,level);
+
+                        $("<input/>")
+                                .attr("type","hidden")
+                                .attr("id","skills_"+i)
+                                .attr("name","skills")
+                                .attr("value",skill+":"+level)
+                                .appendTo($form)
+                    }
+                }
+
+                $form.submit();
+
+            });
+
+            //setup
+            var items = $skillsField.val().split(",");
+            $skillsField.val("");
+            console.log("Found ",items);
+
+            for(var i=0; i< items.length; i++){
+                addSkill(items[i]);
+            }
+
+            var extraSkills = [
+            {% if isLinkedInConnected %}
+                {% for skill in skills %}
+                    '{{ skill.skill.name }}',
+                {% endfor %}
+            {% endif %}
+            ];
+
+
+            for(var j=0; j < extraSkills.length; j++){
+                var skill = extraSkills[j];
+                if($.inArray(skill, added) <= -1){
+                    addSkill(skill);
+                }
+            }
+
+        })(jQuery);
+
+    </script>
+{% endblock %}

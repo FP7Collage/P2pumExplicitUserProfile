@@ -1,0 +1,8 @@
+{% extends "emails/_main.twig" %}
+{% block title %}{{ subject }}{% endblock %}
+{% block main %}
+    <p>Hi {{ name }},</p>
+    <p>Thank you for registering to the <strong>Collage</strong> project.</p>
+    <p>In order to continue you need to confirm your account by clicking on the link below</p>
+    <p><h1><a href="{{ url }}">Confirm by clicking here</a></h1></p>
+{% endblock %}

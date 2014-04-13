@@ -1,0 +1,33 @@
+<ul class="list-unstyled">
+    <li><b>Name</b> {{object.name}}</li>
+    <li><b>Lastname </b> {{object.lastname}}</li>
+    <li><b>Username</b> {{object.username}}</li>
+    <li><b>Emails</b>
+        {%for mail in object.emails %}
+        <ol>
+            <li>{{mail.value}}</li>
+        </ol>
+        {% endfor %}
+    </li>
+    <li><b>Social Activity</b>
+        <table class="table">
+            {%for name,value in object.social_activity %}
+            <tr>
+                <td><em>{{name}}</em></td>
+                <td >
+                    {% if (name == "connections_list") %}
+                        <ul class="{{"scroll" if (name == "connections_list")}}">
+                            {% for connection in value %}
+                           <li>{{connection.firstName}} {{ connection.lastName }} ({{ connection.industry }})</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {{value}}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </li>
+</ul>

@@ -1,0 +1,33 @@
+<ul class="list-unstyled">
+    <li><b>Name</b> {{object.name}}</li>
+    <li><b>Lastname </b> {{object.lastname}}</li>
+    <li><b>Username</b> {{object.username}}</li>
+    <li><b>Emails</b>
+        {%for mail in object.emails %}
+        <ol>
+            <li>{{mail.value}}</li>
+        </ol>
+        {% endfor %}
+    </li>
+    <li><b>Social Activity</b>
+        <table class="table">
+            {%for name,value in object.social_activity %}
+            <tr>
+                <td><em>{{name}}</em></td>
+                <td >
+                    {% if (name == "following_list" or name == "followers_list") %}
+                        <ul class="{{"scroll" if (name == "following_list" or name == "followers_list") else ""}}">
+                            {% for connection in value %}
+                           <li>{{connection.name}} (<a href="http://www.twitter.com/{{connection.screen_name}}" target="_blank">@{{connection.screen_name}})</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        {{value}}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </li>
+</ul>

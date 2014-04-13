@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Collage User Profiling Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1>Collage User Profiling Service</h1>
+    </div>
+    <div class="row">
+        <div class="xl-md-12">
+            <h1>{{user.name}} {{user.lastname}}</h1>
+            <h5><b>Facebook</b> {{user.fbid}}</h5>
+            <h5><b>Twitter</b> {{user.twitterId}}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4" style="background-color: #e7e598">
+            <h3>Social Template (Facebook)</h3>
+            {% set object=facebook.social %}
+            {% include "social.html" %}
+
+            <h3>Tags Template (Facebook)</h3>
+            {% set object=facebook.tags%}
+            {% include "tags.html" %}
+        </div>
+        <div class="col-md-4"  style="background-color: #c5e7d0">
+            <h3>Collage</h3>
+
+            <ul class="list-unstyled">
+
+                <li><b>Name</b> {{facebook.social.name}}</li>
+                <li><b>Name</b> {{twitter.social.name}}</li>
+                <li><b>Lastname </b> {{facebook.social.lastname}}</li>
+                <li><b>Username</b> {{twitter.social.username}}</li>
+                <li><b>Social Activity</b>
+                    <table class="table">
+                        {%for name,value in facebook.social.social_activity %}
+
+                        <tr>
+                            <td><em>{{name}}</em></td>
+                            <td>{{value}}</td>
+                        </tr>
+
+                        {% endfor %}
+
+
+                        {%for name,value in twitter.social.social_activity %}
+
+                        <tr>
+                            <td><em>{{name}}</em></td>
+                            <td >
+                                {% if (name == "following_list" or name == "followers_list") %}
+                                    <ul class="{{"scroll" if (name == "following_list" or name == "followers_list") else ""}}">
+                                        {% for connection in value %}
+                                        <li>{{connection.name}} (<a href="http://www.twitter.com/{{connection.screen_name}}" target="_blank">@{{connection.screen_name}})</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    {{value}}
+                                {% endif %}
+                                </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                </li>
+                <li>
+                    <h3>Tags</h3>
+                    <div style="overflow-y: scroll;height: 300px;width:100%">
+                        <table class="table" >
+                            {% for tag in facebook.tags.tags%}
+                            <tr><td>{{tag}}</td></tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4" style="background-color: #aac2e7">
+            <h3>Social Template (Twitter)</h3>
+            {% set object= twitter.social%}
+            {% include "social.html" %}
+            <h3>Tags Template (Twitter)</h3>
+            {% set object= twitter.tags%}
+            {% include "tags.html" %}
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+</body>
+</html>
