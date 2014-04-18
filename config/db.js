@@ -1,10 +1,9 @@
 exports.connection = function(){
 
-    var url = 'mongodb://localhost/p2pum-explicit';
 
-    if(process.env.NODE_ENV=='production' || process.env.NODE_ENV=='test'){
-        url = 'mongodb://admin:peekadmin@paulo.mongohq.com:10091/peekintoo';
-    }
+
+
+    var url = process.env['MONGO_URL'] ? process.env['MONGO_URL'] :  'mongodb://localhost/p2pum-explicit';
 
     mongoose.connect(url);
     var db = mongoose.connection;

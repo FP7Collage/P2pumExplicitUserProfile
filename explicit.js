@@ -23,10 +23,11 @@ var app = express();
 
 app.locals({
    peers:{
-       linkedin:"https://linkenin.p2pum.fotis:7004/connect"
+       linkedin: (process.env['p2pum.url'] ? process.env['p2pum.url'] : "https://linkenin.p2pum.fotis:7004/connect")
    },
-    appurl:"https://explicit.p2pum.fotis:7008"
+    appurl:process.env['local.url'] ? process.env['local.url'] : "https://explicit.p2pum.fotis:7008"
 });
+
 
 mailer = require('./config/mailer').mailer();
 utils = require('./config/utils');
@@ -105,6 +106,7 @@ http.createServer(app).listen(app.get('port'), function(){
 });
 
 
+
 if ('development' == app.get('env')) {
 
     https = require('https');
@@ -119,4 +121,6 @@ if ('development' == app.get('env')) {
 }
 
 
+
+console.log("Locals",app.locals);
 
