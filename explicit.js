@@ -58,11 +58,10 @@ app.use(express.cookieParser('explicit-peer') );
 app.use(express.session(
         {   secret: 'explicit-peer',
             store: new MongoStore({
-                db: "p2pum-explicit"
+                db: "p2pumexplicit"
             })
         })
     );
-//app.use(express.session({secret: 'collage-user-model', store:rstore}));
 
 // use passport session
 app.use(passport.initialize());
