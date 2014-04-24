@@ -58,7 +58,7 @@ app.use(express.cookieParser('explicit-peer') );
 app.use(express.session(
         {   secret: 'explicit-peer',
             store: new MongoStore({
-                db: "p2pumexplicit"
+                db: connection.url
             })
         })
     );

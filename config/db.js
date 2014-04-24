@@ -15,6 +15,6 @@ exports.connection = function(){
 
     return {
         db: db,
-            url: url
+        url: url
     }
 };
