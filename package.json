@@ -24,6 +24,7 @@
       "async":"0.2.9",
       "forms":"0.3.0",
       "nodemailer":"0.6.0",
-      "xtend":"2.1.2"
+      "xtend":"2.1.2",
+      "restler":"3.1.0"
   }
 }

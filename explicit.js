@@ -7,7 +7,7 @@ var express = require('express')
     , routes = require('./routes')
     , register = require('./routes/register')
     , skills = require('./routes/skills')
-    , p2pum = require('./routes/p2pum')
+    , p2pumr = require('./routes/p2pum')
     , flash = require('connect-flash')
     , fs = require('fs')
     , http = require('http')
@@ -21,13 +21,17 @@ mongoose = require('mongoose');
 
 var app = express();
 
-app.locals({
-   peers:{
-       linkedin: (process.env['p2pum.url'] ? process.env['p2pum.url'] : "https://linkenin.p2pum.fotis:7004/connect")
-   },
-    appurl:process.env['local.url'] ? process.env['local.url'] : "https://explicit.p2pum.fotis:7008"
-});
+var env = {
+    peers:{
+        linkedin: (process.env['p2pum_linkedin'] ? process.env['p2pum_linkedin'] : "http://linkedin.p2pum.fotis:3004/")
+    }
+};
 
+console.log(env);
+app.locals(env);
+
+
+p2pum = require("./controllers/p2pum").setup(app);
 
 mailer = require('./config/mailer').mailer();
 utils = require('./config/utils');
@@ -58,7 +62,7 @@ app.use(express.cookieParser('explicit-peer') );
 app.use(express.session(
         {   secret: 'explicit-peer',
             store: new MongoStore({
-                db: connection.url
+                mongoose_connection: connection.db
             })
         })
     );
@@ -89,7 +93,7 @@ app.all('/register/validate',register.registerValidate);
 
 app.all('/skills', p.ensureAuthenticated("/login"),skills.index);
 
-app.get('/connect',p.ensureAuthenticated("/login"),p2pum.connect);
+app.get('/connect',p.ensureAuthenticated("/login"),p2pumr.connect);
 
 
 
@@ -118,8 +122,3 @@ if ('development' == app.get('env')) {
 
 
 }
-
-
-
-console.log("Locals",app.locals);
-

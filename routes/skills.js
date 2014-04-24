@@ -1,7 +1,5 @@
 exports.index = function(req,res){
 
-    //check p2pum first for linked in
-    var p2pum = require("../controllers/p2pum");
     var forms  = require("../lib/forms");
     var my_form = forms.skills();
 
@@ -37,7 +35,13 @@ exports.index = function(req,res){
             other: function (form) {
                 // the data in the request didn't validate,
                 // calling form.toHTML() again will render the error messages
-                res.render("skills.twig",{isLinkedInConnected:connected, skills:skills, my_form: forms.toHTML(form)});//function (name, object) { return bootstrap_field(name, object); })});
+                res.render("skills.twig",
+                    {
+                        isLinkedInConnected:connected,
+                        skills:skills,
+                        my_form: forms.toHTML(form),
+                        app_url: utils.absoluteUrl("/",{},req)
+                    });//function (name, object) { return bootstrap_field(name, object); })});
             }
         });
     };
