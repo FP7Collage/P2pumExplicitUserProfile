@@ -84,16 +84,16 @@ if ('development' == app.get('env')) {
 }
 
 
-app.get('/', p.ensureAuthenticated("/login"), routes.index);
+app.get('/', p.ensureAuthenticated("/login",passport), routes.index);
 app.get('/logout', routes.logout);
 app.get('/login',routes.login);
 
 app.all('/register',register.index);
 app.all('/register/validate',register.registerValidate);
 
-app.all('/skills', p.ensureAuthenticated("/login"),skills.index);
+app.all('/skills', p.ensureAuthenticated("/login",passport),skills.index);
 
-app.get('/connect',p.ensureAuthenticated("/login"),p2pumr.connect);
+app.get('/connect',p.ensureAuthenticated("/login",passport),p2pumr.connect);
 
 
 
