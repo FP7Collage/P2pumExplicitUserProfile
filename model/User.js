@@ -31,4 +31,12 @@ User.getAccountsByIds = function (ids, callback) {
 };
 
 
+// get account objects for a set of account ids
+User.findByUsername= function (username, callback) {
+    User.findOne({username:username}, function (err, account){
+        callback(account);
+    });
+};
+
+
 

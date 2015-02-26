@@ -1,3 +1,5 @@
+var udum =require('../controllers/template.js').templates();
+
 var failed = function(res){
 
     res.setHeader('Content-Type', 'application/json');
@@ -139,4 +141,98 @@ exports.linkedin= function(req, res){
             }
         );
     });
+};
+
+exports.fetchTemplate = function(req,res){
+
+  var t = req.params.template;
+  var id = req.user.username;
+
+  if(udum[t] !=undefined){
+
+    udum[t].translate(id,function(object){
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(object));
+    });
+
+  }else{
+    res.setHeader('Content-Type', 'application/json');
+    res.end("{}");
+  }
+
+};
+
+exports.fetchStatus = function(req,res){
+
+  res.setHeader('Content-Type', 'application/json');
+
+  if(! req.user.id){
+    res.end(null);
+  }
+  udum.status.determine(req.params.id,function(object){
+    res.end(JSON.stringify(object));
+  })
+
+};
+
+exports.fetchAuthTemplate = function(req,res){
+
+  if(!req.query.ticket){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(401).send('{error: "Invalid Ticket"}');
+    return;
+  }
+
+  if(!req.params.id || !req.params.template || udum[req.params.template] ==undefined){
+    res.setHeader('Content-Type', 'application/json');
+    res.status(404).send('{error: "Not enough parameters (/p2pum/:template/:id?ticket=) "}');
+    return;
+  }
+
+
+  var collage = require("../controllers/collage");
+
+
+  collage.getUserInfo(req.query.ticket,function(token,data,err){
+
+    if(err){
+      res.setHeader('Content-Type', 'application/json');
+      res.status(401).send('{error: "Invalid Authentication"}');
+      return;
+    }
+
+   if(data.role.indexOf("USER_MANAGER") < 0){
+      res.setHeader('Content-Type', 'application/json');
+      res.status(401).send('{error: "Invalid Authentication"}');
+      return;
+    }
+
+
+
+    var t = req.params.template;
+    var id = req.params.id;
+
+    console.log("Getting",t," information for",t,"by",data.username);
+    udum[t].translate(id,function(object){
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify(object));
+    });
+
+  });
+
+};
+
+
+
+exports.fetchStatus = function(req,res){
+
+  res.setHeader('Content-Type', 'application/json');
+
+  if(! req.user.id){
+    res.end(null);
+  }
+  udum.status.determine(req.params.id,function(object){
+    res.end(JSON.stringify(object));
+  })
+
 };

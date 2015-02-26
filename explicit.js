@@ -23,7 +23,7 @@ var app = express();
 
 var env = {
     peers:{
-        linkedin: (process.env['p2pum_linkedin'] ? process.env['p2pum_linkedin'] : "http://linkedin.p2pum.fotis:3004/")
+        linkedin: (process.env['p2pum_linkedin'] ? process.env['p2pum_linkedin'] : "http://linkedin.p2pum.fotis:3004")
     }
 };
 
@@ -94,7 +94,8 @@ app.all('/register/validate',register.registerValidate);
 app.all('/skills', p.ensureAuthenticated("/login",passport),skills.index);
 
 app.get('/connect',p.ensureAuthenticated("/login",passport),p2pumr.connect);
-
+app.get('/p2pum/:template', p.ensureAuthenticated("/login",passport),p2pumr.fetchTemplate);
+app.get('/p2pum/:template/:id', p.ensureAuthenticated("/login",passport),p2pumr.fetchAuthTemplate);
 
 
 app.post('/login',

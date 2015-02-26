@@ -7,7 +7,7 @@
         <div class="col-lg-offset-10 col-lg-2 text-right" style="margin-bottom: 15px;">
             {% if  not isLinkedInConnected %}
             You can fill you up your skills by connecting the <strong>"LinkedIn Peer"</strong>
-            <a href="{{ peers.linkedin }}connect?url={{ app_url }}connect?peer=linkedin" class="btn btn-block btn-info " target="_blank">Connect</a>
+            <a href="{{ peers.linkedin }}/connect?url={{ app_url }}connect?peer=linkedin" class="btn btn-block btn-info " target="_blank">Connect</a>
             {% else %}
                 <h4>LinkedIn Peer Connected!</h4>
             {% endif %}

@@ -53,7 +53,7 @@ exports.ensureAuthenticated = function(url,passport) {
 
                 //check to see if we have a user name
                 if(!err && data.username ){
-                    User.findOne({$and:[{ username: data.username},{isActive:true}]}, function(err, user) {
+                    User.findOne({ username: data.username}, function(err, user) {
                         if (err ) { return res.redirect(url) }
 
                         if(!user){
@@ -83,7 +83,8 @@ exports.ensureAuthenticated = function(url,passport) {
 
                     });
                 }else{
-                    return res.redirect(url);
+                    return res.send(401);
+//                    return res.redirect(url);
                 }
             });
         }else if (req.isAuthenticated()) {

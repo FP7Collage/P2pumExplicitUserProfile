@@ -6,14 +6,16 @@ exports.index = function(req, res){
    }
 
     User.findById(req.user._id,function(err,object){
-        res.render('index.twig',{profile:object});
+        res.render('index.twig',{profile:object,app_url: utils.absoluteUrl("/",{},req)});
     });
 };
 
 
 exports.login = function (req, res) {
 
-    res.render('login.twig',{messages:req.session.messages});
+    var message = req.session.messages;
+    req.session.messages = null;
+    res.render('login.twig',{messages:message,app_url: utils.absoluteUrl("/",{},req)});
 };
 
 exports.logout = function (req, res) {
