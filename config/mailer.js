@@ -1,3 +1,5 @@
+var _constants = require('./constants.js');
+
 exports.mailer=function(){
 
     var nodemailer = require("nodemailer");
